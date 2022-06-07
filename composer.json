@@ -21,7 +21,7 @@
     "version": "2.4.3",
     "require": {
         "magento/composer-dependency-version-audit-plugin": "~0.1",
-        "magento/composer-root-update-plugin": "~1.1",
+        "magento/composer-root-update-plugin": "1.1.2",
         "magento/module-bundle-sample-data": "100.4.*",
         "magento/module-catalog-rule-sample-data": "100.4.*",
         "magento/module-catalog-sample-data": "100.4.*",
