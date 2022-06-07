@@ -121,7 +121,13 @@ class AddToCart implements ObserverInterface
         $product_name = $product->getName();
         $wordlog = 'NONE';
         if ($this->customerSession->isLoggedIn()) {
-            $custom_name = $this->customerSession->getCustomerName();
+		// $custom_name = $this->customerSession->getCustomerName();
+	    // $custom_name = $this->customerSession->_customer->getFirstname() . " " . $this->customerSession->_customer->getLastname();
+	                // $custom_name = $this->customerSession->getCustomerId();
+            // $custom_id = $this->customerSession->getCustomerId();
+            $customer_data = $this->customerSession->getCustomerData();
+            $custom_name = $customer_data->getFirstname() . " ";
+            $custom_name .= $customer_data->getLastname();
         }
 
         $wordlog = $custom_name . " " . $product_name . " " . $qty . " Qty";
