@@ -1,0 +1,66 @@
+version: "3"
+services:
+  #MySQL Service
+  # db:
+  #   image: mariadb:10.4
+  #   container_name: db
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${ROOT_PWD}
+  #     - MYSQL_DATABASE=${DB_DATABASE}
+  #     - MYSQL_USER=${DB_USER}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD}
+  #   volumes:
+  #     - dbdata:/var/lib/mysql/
+  #     - ./docker/mariadb/initdb/:/docker-entrypoint-initdb.d
+  #     - ./docker/mariadb/data/:/var/lib/mysql/
+  #     - ./docker/mariadb/my.cnf:/etc/mysql/my.cnf
+  # phpmyadmin:
+  #   container_name: magento_phpmyadmin
+  #   restart: always
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${ROOT_PWD}
+  #     - MYSQL_USER=${DB_USER}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD}
+  #   ports:
+  #     - "8080:80"
+  #   links:
+  #     - db:database
+  #   depends_on:
+  #     - db
+  elasticsearch:
+    container_name: es_magento
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
+    # build: ./elasticsearch
+    environment:
+      - node.name=es_magento
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=127.0.0.1,[::1]
+      # - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.port=9200
+      - network.host=0.0.0.0
+      - discovery.type=single-node
+      #- proxy_server
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./docker/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+#Docker Networks
+networks:
+  default:
+    name: www_magento_network
+    external: true
+#volumes
+volumes:
+  dbdata:
+    driver: local
