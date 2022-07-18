@@ -72,3 +72,4 @@ atlassian*
 .DS_Store
 /docker/mariadb/data
 /docker/elasticsearch
+/docker/mysql/data

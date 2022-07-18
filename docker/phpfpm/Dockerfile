@@ -1,0 +1,66 @@
+FROM php:8.1-fpm
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+RUN apt-get update && apt-get install -y \
+  gzip \
+  libbz2-dev \
+  libfreetype6-dev \
+  libicu-dev \
+  libjpeg62-turbo-dev \
+  libmcrypt-dev \
+  libpng-dev \
+  libsodium-dev \
+  libssh2-1-dev \
+  libxslt1-dev \
+  libzip-dev \
+  lsof \
+  default-mysql-client \
+  zip
+
+# RUN docker-php-ext-configure \
+#   gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+# RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp
+RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/
+
+
+
+RUN docker-php-ext-install \
+  bcmath \
+  bz2 \
+  calendar \
+  exif \
+  gd \
+  gettext \
+  intl \
+  # mbstring \
+  mysqli \
+  opcache \
+  pcntl \
+  pdo_mysql \
+  soap \
+  sockets \
+  sodium \
+  sysvmsg \
+  sysvsem \
+  sysvshm \
+  xsl \
+  zip
+
+
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+
+# RUN groupadd -g 1000 www-data \
+#  && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash www-data
+
+
+# RUN useradd -g 1000 -u 1000 -d /var/www -s /bin/bash www-data
+
+RUN mkdir -p /var/www/html \
+   && chown -R www-data:www-data /var/www
+
+
+USER www-data:www-data
+VOLUME /var/www
+WORKDIR /var/www/html
